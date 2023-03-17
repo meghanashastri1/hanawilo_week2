@@ -43,7 +43,7 @@ const deleteArtists = (req, res, next) => {
 //For :/artistId
 const getArtist = (req, res, next) => {
     res
-    .status(200)
+    .status(200) 
     .setHeader('Content-Type', 'application/json')
     .json({message: `Show me the artist with the name of ${req.params.artistId}`});
 }

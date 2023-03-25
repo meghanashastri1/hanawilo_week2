@@ -1,6 +1,6 @@
 // For '/artist' endpoints 
 
-const getArtists = (req, res, next) => {
+const getArtists = async (req, res, next) => {
     //query parameter 
     if (Object.keys(req.query).length){
         const {
@@ -19,47 +19,77 @@ const getArtists = (req, res, next) => {
             console.log(`Searching artist by ${query}`);
         }
     }
-
-    res
-    .status(200)
-    .setHeader('Content-Type', 'application/json')
-    .json({message: 'You hit me! Show me all the artists'});
+    try {
+        const artistsPayload = await Artist.find();
+        res
+        .status(200)
+        .setHeader('Content-Type', 'application/json')
+        .json(artistsPayload);
+    } catch (err) {
+        throw new Error(`Error retrieving artists: ${err.message}`) 
+    }
 }
 
-const postArtist = (req, res, next) => {
-    res
-    .status(201)
-    .setHeader('Content-Type', 'application/json')
-    .json({message: `Create artist with name of ${req.body.artistName}`});
+const postArtist = async (req, res, next) => {
+    try {
+        const newArtist = await Artist.create(req.body);
+        res
+        .status(201)
+        .setHeader('Content-Type', 'application/json')
+        .json(newArtist);
+    } catch (err) {
+        throw new Error(`Error entering new artist: ${err.message}`) 
+    }
 }
 
 
-const deleteArtists = (req, res, next) => {
-    res
-    .status(200)
-    .setHeader('Content-Type', 'application/json')
-    .json({message: 'Deleting the artists'});
+const deleteArtists = async (req, res, next) => {
+    try {
+        const deletedArtists = await Artist.deleteMany();
+        res
+        .status(200)
+        .setHeader('Content-Type', 'application/json')
+        .json(deletedArtists);
+    } catch (err) {
+        throw new Error(`Error deleting artists: ${err.message}`) 
+    }
 }
 //For :/artistId
-const getArtist = (req, res, next) => {
-    res
-    .status(200) 
-    .setHeader('Content-Type', 'application/json')
-    .json({message: `Show me the artist with the name of ${req.params.artistId}`});
+const getArtist = async (req, res, next) => {
+    try {
+        const getArtist = await Artist.findById(req.params.artistId)
+        res
+        .status(200)
+        .setHeader('Content-Type', 'application/json')
+        .json(getArtist);
+    } catch (err) {
+        throw new Error(`Error retrieving artist: ${err.message}`) 
+    }
 }
-const updateArtist = (req, res, next) => {
-    res
-    .status(200)
-    .setHeader('Content-Type', 'application/json')
-    .json({message: `Update the artist with the name of ${req.params.artistId}`});
+const updateArtist = async (req, res, next) => {
+    try {
+        const updatedArtist = await Artist.findByIdAndUpdate(req.params.artistId, req.body, {new: true})
+        res
+        .status(200)
+        .setHeader('Content-Type', 'application/json')
+        .json(updatedArtist);
+    } catch (err) {
+        throw new Error(`Error updating artist: ${err.message}`) 
+    }
 }
 
-const deleteArtist = (req, res, next) => {
-    res
-    .status(200)
-    .setHeader('Content-Type', 'application/json')
-    .json({message: `Delete the artist with the name of ${req.params.artistId}`});
+const deleteArtist = async (req, res, next) => {
+    try {
+        const deletedArtist = await Artist.findByIdAndDelete(req.params.artistId)
+        res
+        .status(200)
+        .setHeader('Content-Type', 'application/json')
+        .json(deletedArtist);
+    } catch (err) {
+        throw new Error(`Error deleting artist: ${err.message}`) 
+    }
 }
+
 module.exports = {
     getArtists,
     postArtist,

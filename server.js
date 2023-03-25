@@ -7,8 +7,10 @@ const user = require('./routes/user');
 const logger = require('./middlewares/logger');
 const errorHandler = require('./middlewares/error');
 
+const connectDB = require('./config/db');
 
-dotenv.config({ path: './config/config.env' }); 
+dotenv.config({ path: './config/config.env'});
+connectDB();
 
 const app = express(); 
 

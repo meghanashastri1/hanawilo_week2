@@ -1,3 +1,4 @@
+const User = require('../models/User');
 // For '/user' endpoints 
 
 const getUsers = async (req, res, next) => {

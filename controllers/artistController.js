@@ -1,3 +1,4 @@
+const Artist = require('../models/Artist');
 // For '/artist' endpoints 
 
 const getArtists = async (req, res, next) => {

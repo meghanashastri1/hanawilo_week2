@@ -1,3 +1,4 @@
+const Song = require('../models/Song');
 // For '/song' endpoints 
 
 const getSongs = async (req, res, next) => {

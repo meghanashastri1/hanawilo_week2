@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getSongs, postSong, deleteSongs, getSong, updateSong, deleteSong, getSongRatings, postSongRating, deleteSongRatings } = require('../controllers/songController');
+const { getSongs, postSong, deleteSongs, getSong, updateSong, deleteSong, getSongRatings, postSongRating, deleteSongRatings, getSongRating, updateSongRating, deleteSongRating } = require('../controllers/songController');
 
 router.route('/')
     .get(getSongs)
@@ -17,5 +17,10 @@ router.route('/:songId/ratings')
     .get(getSongRatings)
     .post(postSongRating)
     .delete(deleteSongRatings);
+
+router.route('/:songId/ratings/ratingId')
+    .get(getSongRating)
+    .put(updateSongRating)
+    .delete(deleteSongRating);
 
 module.exports = router;

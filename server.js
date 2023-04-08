@@ -6,6 +6,8 @@ const artist = require('./routes/artist');
 const user = require('./routes/user');
 const logger = require('./middlewares/logger');
 const errorHandler = require('./middlewares/error');
+const fileupload = require('express-fileupload');
+const cookieParser = require('cookie-parser');
 
 const connectDB = require('./config/db');
 
@@ -17,6 +19,8 @@ const app = express();
 // parse application/json
 app.use(bodyParser.json());
 
+app.use(fileupload());
+app.use(cookieParser());
 app.use(logger);
 app.use(errorHandler);
 app.use('/song', song);

@@ -40,10 +40,8 @@ const getUsers = async (req, res, next) => {
 const postUser = async (req, res, next) => {
     try {
         const newUser = await User.create(req.body);
-        res
-        .status(201)
-        .setHeader('Content-Type', 'application/json')
-        .json(newUser);
+        
+        sendTokenResponse(newUser, 201, res)
     } catch (err) {
         throw new Error(`Error retrieving user: ${err.message}`) 
     }
@@ -99,11 +97,29 @@ const deleteUser = async (req, res, next) => {
     }
 }
 
+const sendTokenResponse = (user, statusCode, res) => {
+    const token = user.getSignedJwtToken(); 
+
+    const options = {
+        expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000), 
+
+        //make sure that only the server can process this cookie
+        httpOnly: true
+         
+    }
+
+    res
+    .status(statusCode)
+    .cookie('token', token, options)
+    .json(token)
+}
+
 module.exports = {
     getUsers,
     postUser,
     deleteUsers,
     getUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    sendTokenResponse
 };

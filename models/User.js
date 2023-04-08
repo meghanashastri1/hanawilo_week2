@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema; 
+const validator = require('validator');
+const jwt = require('jsonwebtoken');
 
 const UserSchema = new Schema({
     userName: {
@@ -38,10 +40,10 @@ const UserSchema = new Schema({
         required: true
     }, 
     lastName:{
-        type: String, 
+        type: String,  
         required: true
     }
-}, {
+}, { 
     timestamps: true
 })
 
@@ -64,4 +66,11 @@ UserSchema.pre('save', function(next) {
 UserSchema.post('save', function(next) {
     this.gender = this.gender.toUpperCase()
 })
+
+UserSchema.methods.getSignedJwtToken = function() {
+    return jwt.sign({id: this._id}, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRE
+    })
+}
+
 module.exports = mongoose.model('User', UserSchema);

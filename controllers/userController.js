@@ -97,6 +97,23 @@ const deleteUser = async (req, res, next) => {
     }
 }
 
+
+// For '/login' endpoint
+const login = async (req, res, next) => {
+    const {email, password } = req.body;
+
+    if (!email || !password) throw new Error('Please provide an email and password')
+
+    const user = await User.findOne({ email }).select('+password'); 
+
+    if (!user) throw new Error('User does not exist');
+
+    const isMatch = await user.matchPassword(password);
+    if (!isMatch) throw new Error('Invalid Credentials');
+
+    sendTokenResponse(user, 200, res);
+}
+
 const sendTokenResponse = (user, statusCode, res) => {
     const token = user.getSignedJwtToken(); 
 
@@ -114,6 +131,7 @@ const sendTokenResponse = (user, statusCode, res) => {
     .json(token)
 }
 
+
 module.exports = {
     getUsers,
     postUser,
@@ -121,5 +139,6 @@ module.exports = {
     getUser,
     updateUser,
     deleteUser,
-    sendTokenResponse
+    sendTokenResponse, 
+    login
 };

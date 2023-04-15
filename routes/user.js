@@ -1,15 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const { getUsers, postUser, deleteUsers, getUser, updateUser, deleteUser } = require('../controllers/userController');
+const { getUsers, postUser, deleteUsers, getUser, updateUser, deleteUser, sendTokenResponse, login } = require('../controllers/userController');
+const adminValidator = require('../middlewares/utils/validators');
+const protectedRoute = require('../middlewares/auth');
+
+router.route('/login')
+    .post(login)
 
 router.route('/')
-    .get(getUsers)
-    .post(postUser)
-    .delete(deleteUsers);
+    .get(protectedRoute, adminValidator, getUsers)
+    .post(protectedRoute, postUser)
+    .delete(protectedRoute, deleteUsers);
 
 
 router.route('/:userId')
     .get(getUser)
-    .put(updateUser)
-    .delete(deleteUser);
+    .put(protectedRoute, updateUser)
+    .delete(protectedRoute, deleteUser);
 module.exports = router;

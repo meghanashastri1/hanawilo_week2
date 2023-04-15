@@ -1,18 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const { getArtists, postArtist, deleteArtists, getArtist, updateArtist, deleteArtist, postArtistImage } = require('../controllers/artistController');
+const protectedRoute = require('../middlewares/auth');
 
 router.route('/')
     .get(getArtists)
-    .post(postArtist)
-    .delete(deleteArtists);
+    .post(protectedRoute, postArtist)
+    .delete(protectedRoute, deleteArtists);
 
 router.route('/:artistId')
     .get(getArtist)
-    .put(updateArtist)
-    .delete(deleteArtist);
+    .put(protectedRoute, updateArtist)
+    .delete(protectedRoute, deleteArtist);
 
 router.route('/:artistId/image')
-    .post(postArtistImage)
+    .post(protectedRoute, postArtistImage)
 
 module.exports = router;
